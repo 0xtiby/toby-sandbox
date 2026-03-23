@@ -2,6 +2,7 @@
 
 const { loadTasks, saveTasks } = require('./store');
 const { createTask, nextId } = require('./model');
+const { list } = require('./list');
 
 const USAGE = `Usage: task <command> [arguments]
 
@@ -33,7 +34,7 @@ const handlers = {
     saveTasks(tasks);
     console.log(`Added task ${id}: ${title}`);
   },
-  list() {},
+  list,
   done() {},
   delete() {},
 };
