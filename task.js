@@ -20,7 +20,13 @@ const handlers = {
       console.error('Error: title is required');
       process.exit(1);
     }
-    const tasks = loadTasks();
+    let tasks;
+    try {
+      tasks = loadTasks();
+    } catch (err) {
+      console.error(`Error: ${err.message}`);
+      process.exit(1);
+    }
     const id = nextId(tasks);
     const task = createTask(id, title);
     tasks.push(task);

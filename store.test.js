@@ -24,4 +24,10 @@ describe('store', () => {
     saveTasks(tasks);
     assert.deepStrictEqual(loadTasks(), tasks);
   });
+
+  it('loadTasks throws on corrupt JSON', () => {
+    const { loadTasks } = require('./store');
+    fs.writeFileSync(TASKS_FILE, '{invalid');
+    assert.throws(() => loadTasks(), /corrupt/);
+  });
 });

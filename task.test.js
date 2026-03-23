@@ -89,4 +89,15 @@ describe('task.js add', () => {
     assert.match(result.stderr, /title is required/);
     cleanup();
   });
+
+  it('errors on corrupt tasks.json without overwriting', () => {
+    cleanup();
+    fs.writeFileSync(TASKS_FILE, '{invalid');
+    const result = run('add', 'test');
+    assert.strictEqual(result.exitCode, 1);
+    assert.match(result.stderr, /corrupt/);
+    const content = fs.readFileSync(TASKS_FILE, 'utf8');
+    assert.strictEqual(content, '{invalid');
+    cleanup();
+  });
 });

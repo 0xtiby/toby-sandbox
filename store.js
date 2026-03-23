@@ -4,11 +4,16 @@ const path = require('node:path');
 const TASKS_FILE = path.join(process.cwd(), 'tasks.json');
 
 function loadTasks() {
+  let data;
   try {
-    const data = fs.readFileSync(TASKS_FILE, 'utf8');
-    return JSON.parse(data);
+    data = fs.readFileSync(TASKS_FILE, 'utf8');
   } catch {
     return [];
+  }
+  try {
+    return JSON.parse(data);
+  } catch {
+    throw new Error('tasks.json is corrupt');
   }
 }
 
