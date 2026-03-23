@@ -22,8 +22,23 @@ Users need to see their tasks at a glance.
 - Filtering or sorting
 - Adding, completing, or deleting tasks (separate specs)
 
+## Output Format
+
+```
+[ ] 1  Buy milk
+[x] 2  Walk the dog
+[ ] 3  Write tests
+```
+
+Each line: status indicator, id, title — separated by spaces.
+
+## Exit Codes
+
+- `0` — always (even when no tasks exist)
+
 ## Acceptance Criteria
 
 - `task list` prints all tasks with id, title, and status
 - If no tasks exist, prints a friendly "No tasks yet" message
 - Pending tasks show as `[ ]`, done tasks show as `[x]`
+- Corrupt `tasks.json` prints an error and exits 1

@@ -22,9 +22,20 @@ Users need a simple way to create tasks from the terminal.
 - Listing, completing, or deleting tasks (separate specs)
 - Any database or server
 
+## Error Handling
+
+- Empty or missing title: print error message, exit with code 1
+- Corrupt/invalid `tasks.json`: print error message, exit with code 1 (do not overwrite)
+
+## Exit Codes
+
+- `0` — task added successfully
+- `1` — error (empty title, corrupt JSON)
+
 ## Acceptance Criteria
 
 - Running `task add "Buy milk"` creates/appends to `tasks.json`
 - Each task gets a unique incremental id
 - Output confirms the task was added with its id
 - `tasks.json` is valid JSON after every operation
+- `task add ""` or `task add` with no argument prints an error and exits 1
