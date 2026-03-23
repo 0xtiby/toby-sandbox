@@ -238,4 +238,22 @@ describe('task.js delete', () => {
     assert.match(result.stderr, /no tasks file found/);
     cleanup();
   });
+
+  it('errors on corrupt tasks.json', () => {
+    cleanup();
+    fs.writeFileSync(TASKS_FILE, 'not json');
+    const result = run('delete', '1');
+    assert.strictEqual(result.exitCode, 1);
+    assert.match(result.stderr, /corrupt/);
+    cleanup();
+  });
+
+  it('errors on non-array tasks.json', () => {
+    cleanup();
+    fs.writeFileSync(TASKS_FILE, '"not an array"');
+    const result = run('delete', '1');
+    assert.strictEqual(result.exitCode, 1);
+    assert.match(result.stderr, /corrupt/);
+    cleanup();
+  });
 });
