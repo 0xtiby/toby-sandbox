@@ -1,5 +1,8 @@
 #!/usr/bin/env node
 
+const { loadTasks, saveTasks } = require('./store');
+const { createTask, nextId } = require('./model');
+
 const USAGE = `Usage: task <command> [arguments]
 
 Commands:
@@ -11,7 +14,19 @@ Commands:
 const command = process.argv[2];
 
 const handlers = {
-  add() {},
+  add() {
+    const title = process.argv[3];
+    if (!title || title.trim() === '') {
+      console.error('Error: title is required');
+      process.exit(1);
+    }
+    const tasks = loadTasks();
+    const id = nextId(tasks);
+    const task = createTask(id, title);
+    tasks.push(task);
+    saveTasks(tasks);
+    console.log(`Added task ${id}: ${title}`);
+  },
   list() {},
   done() {},
   delete() {},
