@@ -1,7 +1,13 @@
 const { loadTasks } = require('./store');
 
 function list() {
-  const tasks = loadTasks();
+  let tasks;
+  try {
+    tasks = loadTasks();
+  } catch (err) {
+    console.error(`Error: ${err.message}`);
+    process.exit(1);
+  }
   if (tasks.length === 0) {
     console.log('No tasks yet');
     return;

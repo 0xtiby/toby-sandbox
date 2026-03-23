@@ -64,6 +64,14 @@ describe('task list', () => {
     assert.match(result.stdout, /\[x\] 2  Walk the dog/);
   });
 
+  it('errors on corrupt tasks.json with exit 1', () => {
+    const dir = mkTmpDir();
+    fs.writeFileSync(path.join(dir, 'tasks.json'), 'not json');
+    const result = run(dir, 'list');
+    assert.strictEqual(result.exitCode, 1);
+    assert.match(result.stderr, /corrupt/);
+  });
+
   it('prints multiple tasks in order', () => {
     const dir = mkTmpDir();
     fs.writeFileSync(path.join(dir, 'tasks.json'), JSON.stringify([
