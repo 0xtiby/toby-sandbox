@@ -10,11 +10,16 @@ function loadTasks() {
   } catch {
     return [];
   }
+  let parsed;
   try {
-    return JSON.parse(data);
+    parsed = JSON.parse(data);
   } catch {
     throw new Error('tasks.json is corrupt');
   }
+  if (!Array.isArray(parsed)) {
+    throw new Error('tasks.json is corrupt');
+  }
+  return parsed;
 }
 
 function saveTasks(tasks) {
