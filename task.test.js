@@ -36,7 +36,7 @@ describe('task.js CLI', () => {
   });
 
   it('does not crash for valid commands', () => {
-    for (const cmd of ['list', 'done', 'delete']) {
+    for (const cmd of ['list']) {
       const result = run(cmd);
       assert.strictEqual(result.exitCode, 0, `command "${cmd}" should exit 0`);
     }
@@ -98,6 +98,70 @@ describe('task.js add', () => {
     assert.match(result.stderr, /corrupt/);
     const content = fs.readFileSync(TASKS_FILE, 'utf8');
     assert.strictEqual(content, '{invalid');
+    cleanup();
+  });
+});
+
+describe('task.js done', () => {
+  const fs = require('node:fs');
+  const TASKS_FILE = path.join(__dirname, 'tasks.json');
+
+  function cleanup() {
+    try { fs.unlinkSync(TASKS_FILE); } catch {}
+  }
+
+  it('marks a task as done and prints confirmation', () => {
+    cleanup();
+    run('add', 'Buy milk');
+    const result = run('done', '1');
+    assert.strictEqual(result.exitCode, 0);
+    assert.match(result.stdout, /Completed task 1: Buy milk/);
+    const tasks = JSON.parse(fs.readFileSync(TASKS_FILE, 'utf8'));
+    assert.strictEqual(tasks[0].done, true);
+    cleanup();
+  });
+
+  it('prints already complete for done task and exits 0', () => {
+    cleanup();
+    run('add', 'Buy milk');
+    run('done', '1');
+    const result = run('done', '1');
+    assert.strictEqual(result.exitCode, 0);
+    assert.match(result.stdout, /Task 1 is already complete/);
+    cleanup();
+  });
+
+  it('errors with no id argument', () => {
+    cleanup();
+    const result = run('done');
+    assert.strictEqual(result.exitCode, 1);
+    assert.match(result.stderr, /id is required/);
+    cleanup();
+  });
+
+  it('errors with non-numeric id', () => {
+    cleanup();
+    run('add', 'test');
+    const result = run('done', 'abc');
+    assert.strictEqual(result.exitCode, 1);
+    assert.match(result.stderr, /id must be a positive integer/);
+    cleanup();
+  });
+
+  it('errors with non-existent id', () => {
+    cleanup();
+    run('add', 'test');
+    const result = run('done', '999');
+    assert.strictEqual(result.exitCode, 1);
+    assert.match(result.stderr, /task 999 not found/);
+    cleanup();
+  });
+
+  it('errors when tasks.json is missing', () => {
+    cleanup();
+    const result = run('done', '1');
+    assert.strictEqual(result.exitCode, 1);
+    assert.match(result.stderr, /no tasks file found/);
     cleanup();
   });
 });
