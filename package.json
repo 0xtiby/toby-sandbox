@@ -1,0 +1,13 @@
+{
+  "name": "task-tracker",
+  "version": "1.0.0",
+  "description": "A simple CLI task tracker",
+  "bin": {
+    "task": "./task.js"
+  },
+  "scripts": {
+    "test": "node --test",
+    "build": "echo 'No build step required'",
+    "lint": "echo 'No lint step required'"
+  }
+}
